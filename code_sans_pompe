@@ -1,0 +1,33 @@
+const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  // Mesure pH
+  float measure = analogRead(A0);
+  double voltage = measure * (5.0 / 1024.0);
+  float pH = 7 + ((2.5 - voltage) / 0.1841);
+  
+  // Mesure distance
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+
+  // Affichage des valeurs
+  Serial.print("PH: ");
+  Serial.println(pH);
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  delay(1000);
+}
