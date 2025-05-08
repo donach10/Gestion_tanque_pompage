@@ -1,0 +1,42 @@
+const int trigPin = 9;
+const int echoPin = 10;
+const int ledPin = 5; // Pin de la LED
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);// Configurer la LED en sortie
+}
+
+void loop() {
+  // Mesure pH
+  float measure = analogRead(A0);
+  double voltage = measure * (5.0 / 1024.0);
+  float pH = 7 + ((2.5 - voltage) / 0.1841);
+  
+  // Mesure distance
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+
+  // Logique de la LED
+  if (distance >= 40) {
+    digitalWrite(ledPin, HIGH); // Allumer la LED
+  } else if (distance <= 10) {
+    digitalWrite(ledPin, LOW); // Éteindre la LED
+  }
+
+  // Affichage
+  Serial.print("PH: ");
+  Serial.println(pH);
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  delay(1000);
+}
